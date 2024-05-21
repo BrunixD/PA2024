@@ -196,4 +196,8 @@ class tests{
         assertEquals("<componente/>\n" + "<componente/>\n", plano.xPath("plano/fuc/avaliacao/componente"))
         assertEquals(avaliacao.prettyPrint(), plano.xPath("plano/fuc/avaliacao"))
     }
+
+
+
 }
+

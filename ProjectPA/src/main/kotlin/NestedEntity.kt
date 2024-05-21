@@ -10,7 +10,7 @@ package main
  */
 data class NestedEntity(
     override var name: String,
-    val content: String? = null,
+    var content: String? = null,
     override val parent: DirectoryEntity? = null,
     override val attributes: MutableMap<String, String>? = mutableMapOf()
 ) : Entity {
