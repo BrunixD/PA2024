@@ -7,8 +7,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+<<<<<<< Updated upstream
     <orderEntry type="library" name="libs" level="project" />
     <orderEntry type="library" name="openjdk.jmh.generator.reflection" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-reflect:1.9.23" level="project" />
+=======
+    <orderEntry type="library" name="lib" level="project" />
+>>>>>>> Stashed changes
   </component>
 </module>

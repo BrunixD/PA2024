@@ -1,10 +1,15 @@
+<<<<<<< Updated upstream
 package Phase2
+=======
+package phase2
+>>>>>>> Stashed changes
 
 import main.DirectoryEntity
 import main.Entity
 import main.NestedEntity
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
+<<<<<<< Updated upstream
 import kotlin.reflect.full.hasAnnotation
 
 @Anotations.Directory("Fuc")
@@ -69,14 +74,56 @@ fun translate(obj: Any, lastParent : DirectoryEntity? = null) : Entity {
         }
         return newEntity
     }
+=======
+
+@Target(AnnotationTarget.PROPERTY)
+annotation class XmlAttribute(val name: String)
+
+@Target(AnnotationTarget.PROPERTY)
+annotation class XmlElementName(val name: String)
+
+class FUC(
+    @XmlAttribute("Código")
+    val codigo: String,
+    @XmlElementName("Nome")
+    val nome: String,
+    @XmlElementName("Ects")
+    val ects: Double,
+    @XmlElementName("Observações")
+    val observacoes: String
+)
+
+fun translate(obj: Any): Entity {
+    val name = obj::class.simpleName
+    val newObject = DirectoryEntity(name = name.toString())
+    print(name)
+    val members = obj::class.declaredMemberProperties
+    members.forEach { member ->
+        member.findAnnotation<XmlAttribute>()?.let {
+            newObject.attributes?.put(it.name, member.call(obj).toString())
+        }
+        member.findAnnotation<XmlElementName>()?.let {
+            val nestedName = it.name
+            val nestedValue = member.call(obj).toString()
+            NestedEntity(nestedName, nestedValue, newObject)
+        }
+    }
+
+    return newObject
+>>>>>>> Stashed changes
 }
 
 fun main(args: Array<String>) {
     val f = FUC("M4310", "Programação Avançada", 6.0, "la la...")
+<<<<<<< Updated upstream
     val n = NESTED("atributo123" , "vou ser um conteudo")
     val rootDirectory = translate(f)
     val rootDirectory2 = translate(n)
     println(rootDirectory.prettyPrint(0))
     println("\n" + rootDirectory2.prettyPrint(0))
 
+=======
+    val rootDirectory = translate(f)
+    println(rootDirectory.prettyPrint(0))
+>>>>>>> Stashed changes
 }

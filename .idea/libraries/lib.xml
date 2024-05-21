@@ -1,6 +1,10 @@
 <component name="libraryTable">
+<<<<<<< Updated upstream:.idea/libraries/libs.xml
   <library name="libs" type="repository">
     <properties maven-id="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23" />
+=======
+  <library name="lib">
+>>>>>>> Stashed changes:.idea/libraries/lib.xml
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/ProjectPA/libs/junit-platform-commons-1.6.3-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/ProjectPA/libs/kotlin-stdlib-1.8.10-sources.jar!/" />
@@ -50,6 +54,7 @@
       <root url="jar://$PROJECT_DIR$/ProjectPA/libs/annotations-13.0-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/ProjectPA/libs/annotations-13.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/ProjectPA/libs/junit-platform-engine-1.9.0.jar!/" />
+<<<<<<< Updated upstream:.idea/libraries/libs.xml
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.9.23/kotlin-stdlib-jdk8-1.9.23.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.9.23/kotlin-stdlib-1.9.23.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar!/" />
@@ -66,6 +71,17 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.9.23/kotlin-stdlib-1.9.23-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.9.23/kotlin-stdlib-jdk7-1.9.23-sources.jar!/" />
+=======
+      <root url="jar://$PROJECT_DIR$/ProjectPA/libs/kotlin-stdlib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ProjectPA/libs/kotlin-reflect.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ProjectPA/libs/kotlin-test.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-sources.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-reflect-sources.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-test-sources.jar!/" />
+>>>>>>> Stashed changes:.idea/libraries/lib.xml
     </SOURCES>
   </library>
 </component>
