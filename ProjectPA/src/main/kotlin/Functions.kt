@@ -5,94 +5,94 @@ package main
  */
 
 
-    /**
-     * Removes the entity from its parent's list of children.
-     */
-    fun Entity.removeEntity() {
-        this.getParent()?.getChildren()!!.remove(this)
-    }
+/**
+ * Removes the entity from its parent's list of children.
+ */
+fun Entity.removeEntity() {
+    this.getParent()?.getChildren()!!.remove(this)
+}
 
-    /**
-     * Adds a new directory entity to the current directory entity.
-     *
-     * @param entityName The name of the directory entity to add.
-     * @param entityAttributes Optional attributes associated with the directory entity.
-     */
-    fun DirectoryEntity.addDirectoryEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
-        DirectoryEntity(name = entityName, parent = this, attributes = entityAttributes)
-    }
+/**
+ * Adds a new directory entity to the current directory entity.
+ *
+ * @param entityName The name of the directory entity to add.
+ * @param entityAttributes Optional attributes associated with the directory entity.
+ */
+fun DirectoryEntity.addDirectoryEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
+    DirectoryEntity(name = entityName, parent = this, attributes = entityAttributes)
+}
 
-    /**
-     * Adds a new nested entity to the current directory entity.
-     *
-     * @param entityName The name of the nested entity to add.
-     * @param entityContent Optional content associated with the nested entity.
-     * @param entityAttributes Optional attributes associated with the nested entity.
-     */
-    fun DirectoryEntity.addNestedEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
-        NestedEntity(name = entityName, parent = this, content = entityContent, attributes = entityAttributes)
-    }
+/**
+ * Adds a new nested entity to the current directory entity.
+ *
+ * @param entityName The name of the nested entity to add.
+ * @param entityContent Optional content associated with the nested entity.
+ * @param entityAttributes Optional attributes associated with the nested entity.
+ */
+fun DirectoryEntity.addNestedEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
+    NestedEntity(name = entityName, parent = this, content = entityContent, attributes = entityAttributes)
+}
 
-    /**
-     * Adds a new attribute to the entity.
-     *
-     * @param attributeKey The key of the attribute to add.
-     * @param attributeValue The value of the attribute to add.
-     */
-    fun Entity.addAttribute(attributeKey: String, attributeValue: String) {
-        this.attributes?.put(attributeKey, attributeValue)
-    }
+/**
+ * Adds a new attribute to the entity.
+ *
+ * @param attributeKey The key of the attribute to add.
+ * @param attributeValue The value of the attribute to add.
+ */
+fun Entity.addAttribute(attributeKey: String, attributeValue: String) {
+    this.attributes?.put(attributeKey, attributeValue)
+}
 
-    /**
-     * Removes an attribute from the entity.
-     *
-     * @param attributeKey The key of the attribute to remove.
-     */
-    fun Entity.removeAttribute(attributeKey: String) {
-        this.attributes!!.remove(attributeKey)
-    }
+/**
+ * Removes an attribute from the entity.
+ *
+ * @param attributeKey The key of the attribute to remove.
+ */
+fun Entity.removeAttribute(attributeKey: String) {
+    this.attributes!!.remove(attributeKey)
+}
 
-    /**
-     * Modifies the value of an existing attribute in the entity.
-     *
-     * @param attributeKey The key of the attribute to modify.
-     * @param attributeValue The new value for the attribute.
-     */
-    fun Entity.alterAttribute(attributeKey: String, attributeValue: String) {
-        this.attributes!!.replace(attributeKey, attributeValue)
-    }
+/**
+ * Modifies the value of an existing attribute in the entity.
+ *
+ * @param attributeKey The key of the attribute to modify.
+ * @param attributeValue The new value for the attribute.
+ */
+fun Entity.alterAttribute(attributeKey: String, attributeValue: String) {
+    this.attributes!!.replace(attributeKey, attributeValue)
+}
 
-    /**
-     * Retrieves the parent directory entity of the entity.
-     *
-     * @return The parent directory entity, or null if the entity has no parent.
-     */
-    fun Entity.getParent(): DirectoryEntity? {
-        return this.parent
-    }
+/**
+ * Retrieves the parent directory entity of the entity.
+ *
+ * @return The parent directory entity, or null if the entity has no parent.
+ */
+fun Entity.getParent(): DirectoryEntity? {
+    return this.parent
+}
 
-    /**
-     * Retrieves the list of child entities of the directory entity.
-     *
-     * @return The list of child entities.
-     */
-    fun DirectoryEntity.getChildren(): MutableList<Entity> {
-        return this.children
-    }
+/**
+ * Retrieves the list of child entities of the directory entity.
+ *
+ * @return The list of child entities.
+ */
+fun DirectoryEntity.getChildren(): MutableList<Entity> {
+    return this.children
+}
 
-    /**
-     * Adds an attribute to all entities with the specified name within the directory entity's hierarchy.
-     *
-     * @param entityName The name of the entities to which the attribute will be added.
-     * @param nome The name of the attribute to add.
-     * @param value The value of the attribute to add.
-     */
-    fun DirectoryEntity.addAttributeGlobal(entityName: String, nome: String, value: String) {
-        this.accept {
-            if (it.name == entityName) it.addAttribute(nome, value)
-            true
-        }
+/**
+ * Adds an attribute to all entities with the specified name within the directory entity's hierarchy.
+ *
+ * @param entityName The name of the entities to which the attribute will be added.
+ * @param nome The name of the attribute to add.
+ * @param value The value of the attribute to add.
+ */
+fun DirectoryEntity.addAttributeGlobal(entityName: String, nome: String, value: String) {
+    this.accept {
+        if (it.name == entityName) it.addAttribute(nome, value)
+        true
     }
+}
 
 /**
  * Renames all entities with the specified old name to the new name within the directory entity's hierarchy.
