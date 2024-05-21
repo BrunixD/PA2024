@@ -1,5 +1,6 @@
-package Phase2
+package phase2
 
+import Phase2.Anotations
 import main.DirectoryEntity
 import main.Entity
 import main.NestedEntity
@@ -51,9 +52,7 @@ fun translate(obj: Any, lastParent : DirectoryEntity? = null) : Entity {
             }
         }
         return newEntity
-    }
-    else
-    {
+    } else{
         val name = obj::class.findAnnotation<Anotations.Nested>()?.name
         val newEntity = NestedEntity(name = name.toString());
         val members = obj::class.declaredMemberProperties
@@ -78,5 +77,4 @@ fun main(args: Array<String>) {
     val rootDirectory2 = translate(n)
     println(rootDirectory.prettyPrint(0))
     println("\n" + rootDirectory2.prettyPrint(0))
-
 }
