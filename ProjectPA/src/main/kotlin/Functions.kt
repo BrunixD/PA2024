@@ -8,7 +8,7 @@ package main
 /**
  * Removes the entity from its parent's list of children.
  */
-fun Entity.removeEntity() {
+fun Element.removeEntity() {
     this.getParent()?.getChildren()!!.remove(this)
 }
 
@@ -18,8 +18,8 @@ fun Entity.removeEntity() {
  * @param entityName The name of the directory entity to add.
  * @param entityAttributes Optional attributes associated with the directory entity.
  */
-fun DirectoryEntity.addDirectoryEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
-    DirectoryEntity(name = entityName, parent = this, attributes = entityAttributes)
+fun ParentElement.addDirectoryEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
+    ParentElement(name = entityName, parent = this, attributes = entityAttributes)
 }
 
 /**
@@ -29,8 +29,8 @@ fun DirectoryEntity.addDirectoryEntity(entityName: String, entityAttributes: Mut
  * @param entityContent Optional content associated with the nested entity.
  * @param entityAttributes Optional attributes associated with the nested entity.
  */
-fun DirectoryEntity.addNestedEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
-    NestedEntity(name = entityName, parent = this, content = entityContent, attributes = entityAttributes)
+fun ParentElement.addNestedEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
+    SelfClosingElement(name = entityName, parent = this, content = entityContent, attributes = entityAttributes)
 }
 
 /**
@@ -39,7 +39,10 @@ fun DirectoryEntity.addNestedEntity(entityName: String, entityContent: String? =
  * @param attributeKey The key of the attribute to add.
  * @param attributeValue The value of the attribute to add.
  */
-fun Entity.addAttribute(attributeKey: String, attributeValue: String) {
+fun Element.addAttribute(attributeKey: String, attributeValue: String) {
+    this.attributes?.keys?.forEach { key->
+        if (key == attributeKey) return
+    }
     this.attributes?.put(attributeKey, attributeValue)
 }
 
@@ -48,7 +51,7 @@ fun Entity.addAttribute(attributeKey: String, attributeValue: String) {
  *
  * @param attributeKey The key of the attribute to remove.
  */
-fun Entity.removeAttribute(attributeKey: String) {
+fun Element.removeAttribute(attributeKey: String) {
     this.attributes!!.remove(attributeKey)
 }
 
@@ -58,7 +61,7 @@ fun Entity.removeAttribute(attributeKey: String) {
  * @param attributeKey The key of the attribute to modify.
  * @param attributeValue The new value for the attribute.
  */
-fun Entity.alterAttribute(attributeKey: String, attributeValue: String) {
+fun Element.alterAttribute(attributeKey: String, attributeValue: String) {
     this.attributes!!.replace(attributeKey, attributeValue)
 }
 
@@ -67,8 +70,11 @@ fun Entity.alterAttribute(attributeKey: String, attributeValue: String) {
  *
  * @return The parent directory entity, or null if the entity has no parent.
  */
-fun Entity.getParent(): DirectoryEntity? {
-    return this.parent
+fun Element.getParent(): ParentElement? {
+    return if (this.parent != null)
+        this.parent
+    else
+        null
 }
 
 /**
@@ -76,7 +82,7 @@ fun Entity.getParent(): DirectoryEntity? {
  *
  * @return The list of child entities.
  */
-fun DirectoryEntity.getChildren(): MutableList<Entity> {
+fun ParentElement.getChildren(): MutableList<Element> {
     return this.children
 }
 
@@ -87,7 +93,7 @@ fun DirectoryEntity.getChildren(): MutableList<Entity> {
  * @param nome The name of the attribute to add.
  * @param value The value of the attribute to add.
  */
-fun DirectoryEntity.addAttributeGlobal(entityName: String, nome: String, value: String) {
+fun ParentElement.addAttributeGlobal(entityName: String, nome: String, value: String) {
     this.accept {
         if (it.name == entityName) it.addAttribute(nome, value)
         true
@@ -100,7 +106,7 @@ fun DirectoryEntity.addAttributeGlobal(entityName: String, nome: String, value: 
  * @param entityOld The old name of the entities to be renamed.
  * @param entityNew The new name for the entities.
  */
-fun DirectoryEntity.renameEntityGlobal(entityOld: String, entityNew: String) {
+fun ParentElement.renameEntityGlobal(entityOld: String, entityNew: String) {
     this.accept {
         if (it.name == entityOld) {
             it.name = entityNew
@@ -116,7 +122,7 @@ fun DirectoryEntity.renameEntityGlobal(entityOld: String, entityNew: String) {
  * @param attributeNameOld The old name of the attribute to rename.
  * @param attributeNameNew The new name for the attribute.
  */
-fun DirectoryEntity.renameAttributeNameGlobal(entityName: String, attributeNameOld: String, attributeNameNew: String) {
+fun ParentElement.renameAttributeNameGlobal(entityName: String, attributeNameOld: String, attributeNameNew: String) {
     this.accept {
         if (it.name == entityName) {
             val savedValue = it.attributes?.get(attributeNameOld)!!
@@ -132,8 +138,8 @@ fun DirectoryEntity.renameAttributeNameGlobal(entityName: String, attributeNameO
  *
  * @param entityName The name of the entities to remove.
  */
-fun Entity.removeEntityGlobal(entityName: String) {
-    val entitiesToDelete: MutableList<Entity> = mutableListOf()
+fun Element.removeEntityGlobal(entityName: String) {
+    val entitiesToDelete: MutableList<Element> = mutableListOf()
     this.accept {
         if (it.name == entityName) entitiesToDelete.add(it)
         true
@@ -147,7 +153,7 @@ fun Entity.removeEntityGlobal(entityName: String) {
  * @param entityName The name of the entities to search for.
  * @param attributeKeyName The key of the attribute to remove.
  */
-fun Entity.removeAttributeGlobal(entityName: String, attributeKeyName: String) {
+fun Element.removeAttributeGlobal(entityName: String, attributeKeyName: String) {
     this.accept {
         if (it.name == entityName) it.removeAttribute(attributeKeyName)
         true
@@ -160,7 +166,7 @@ fun Entity.removeAttributeGlobal(entityName: String, attributeKeyName: String) {
  * @param path The XPath-like path to search for.
  * @return A string containing the pretty-printed representation of the matching entities.
  */
-fun Entity.xPath(path: String): String {
+fun Element.xPath(path: String): String {
     val parts = path.split("/").toMutableList()
     val result = StringBuilder()
 
