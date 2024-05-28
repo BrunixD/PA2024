@@ -4,7 +4,7 @@ import main.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import Phase2.*
-import Phase2.translate
+import main.kotlin.Phase2.translate
 
 val plano = DirectoryEntity("plano")
 val cursoPA = NestedEntity("curso", content = "Mestrado em Engenharia Informática", parent = plano)
@@ -382,7 +382,7 @@ class tests{
         val NWC = DirectorywithNest("M4A1", "Diretório com Nest 1", 4.0, "Desgosto 1")
         val NWC2 = DirectorywithNest("M4A2", "Diretório com Nest 2", 5.0, "Desgosto 2")
         val list = listOf<DirectorywithNest>(NWC,NWC2)
-        val DWLC = DirectorywithListOfChildrenDirectory("M4A", "Diretório com Nest", 6.0, "Desgosto",list)
+        val DWLC = DirectorywithListOfChildrenDirectory("M4A1", "Diretório com Nest", 6.0, "Desgosto",list)
 
         // val DWON = DirectorywithoutNest("M4A1")
 
@@ -390,10 +390,8 @@ class tests{
         val attributes = mutableMapOf<String,String>()
         attributes.put("Código", "M4A1")
         println(translate(DWLC).prettyPrint())
-        val DirectoryTest = DirectoryEntity("DWithListOfChildren", null, attributes)
+        val DirectoryTest = DirectoryEntity("DWithListOfChildrenDirectory", null, attributes)
         assertEquals(DirectoryTest, translate(DWLC))
     }
-
-
 }
 
