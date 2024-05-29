@@ -1,6 +1,6 @@
 package main
 /**
- * Represents an entity within a directory structure.
+ * Represents an entity within a ParentElement structure.
  * This interface is sealed, meaning all implementations must be declared in the same file.
  */
 sealed interface Element {
@@ -11,7 +11,7 @@ sealed interface Element {
     var name: String
 
     /**
-     * The parent directory entity of the entity, if any.
+     * The parent ParentElement entity of the entity, if any.
      */
     val parent: ParentElement?
 

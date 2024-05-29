@@ -10,29 +10,41 @@ import kotlin.reflect.full.hasAnnotation
 
 // Define the Adapter interface
 interface Adapter {
+    /**
+     * Adapts the given element based on a specified order map.
+     *
+     * @param element The element to adapt.
+     * @param orderMap A map specifying the order of elements.
+     * @return The adapted element.
+     */
     fun adapt(element: Element, orderMap: Map<String, Int>?): Element
 }
 
+// Define a FUC class example annotated with ParentElement
 @Anotations.ParentElement("Fuc")
 class FUC(
     @Anotations.Attribute("Código")
     val codigo: String,
-    @Anotations.SelfClosingElementAttribute("Nome")
+    @Anotations.SelfClosingElementPrimitive("Nome")
     val nome: String,
-    @Anotations.SelfClosingElementAttribute("Ects")
+    @Anotations.SelfClosingElementPrimitive("Ects")
     val ects: Double,
-    @Anotations.SelfClosingElementAttribute("Observações")
+    @Anotations.SelfClosingElementPrimitive("Observações")
     val observacoes: String,
     @Anotations.SelfClosingElement("NN")
-    val nn: nn,
+    val ex: ExampleSelfClosingElementAsClass,
 
     )
-@Anotations.SelfClosingElement("NN")
-class nn (
-    @Anotations.Attribute("Atributo de NN")
-    val NN : String,
+
+// Define a ExampleSelfClosingElementAsClass class example annotated with SelfClosingElement
+@Anotations.SelfClosingElement("Example")
+class ExampleSelfClosingElementAsClass (
+    @Anotations.Attribute("Atributo de example")
+    val example : String,
 )
-@Anotations.SelfClosingElement("Madje 1")
+
+// Define an example of SelfClosingElement class annotated with SelfClosingElement
+@Anotations.SelfClosingElement("SelfClosing Element")
 class NESTED(
     @Anotations.Attribute("Sou um Atributo")
     val atributo: String,
@@ -43,6 +55,13 @@ class NESTED(
 
 // Implement the FUCAdapter class
 class FUCAdapter : Adapter {
+    /**
+     * Adapts the given element by sorting its children based on the provided order map.
+     *
+     * @param element The element to adapt.
+     * @param orderMap A map specifying the order of elements.
+     * @return The adapted element.
+     */
     override fun adapt(element: Element, orderMap: Map<String, Int>?): Element {
         if (element is ParentElement && orderMap != null) {
             element.children.sortedBy { orderMap[it.name] ?: Int.MAX_VALUE }
@@ -52,6 +71,14 @@ class FUCAdapter : Adapter {
     }
 }
 
+/**
+ * Translates an object into an Element structure.
+ *
+ * @param obj The object to translate.
+ * @param lastParent The parent element, if any.
+ * @param orderMap A map specifying the order of elements.
+ * @return The translated element.
+ */
 fun translate(obj: Any, lastParent: ParentElement? = null, orderMap: Map<String, Int>? = null): Element {
     val isParentElement = obj::class.hasAnnotation<Anotations.ParentElement>()
     val name = obj::class.findAnnotation<Anotations.ParentElement>()?.name ?: obj::class.findAnnotation<Anotations.SelfClosingElement>()?.name
@@ -69,7 +96,7 @@ fun translate(obj: Any, lastParent: ParentElement? = null, orderMap: Map<String,
                     newEntity.attributes?.put(attributeName, value)
                 }
 
-                member.hasAnnotation<Anotations.SelfClosingElementAttribute>() -> {
+                member.hasAnnotation<Anotations.SelfClosingElementPrimitive>() -> {
                     val nestedName = member.name
                     val nestedContent = objValue.toString()
                     if (newEntity is ParentElement) SelfClosingElement(
@@ -116,8 +143,8 @@ fun translate(obj: Any, lastParent: ParentElement? = null, orderMap: Map<String,
 }
 
 fun main(args: Array<String>) {
-    val nn = nn("ola")
-    val f = FUC("M4310", "Programação Avançada", 6.0, "la la...", nn)
+    val ex = ExampleSelfClosingElementAsClass("ola")
+    val f = FUC("M4310", "Programação Avançada", 6.0, "la la...", ex)
     val n = NESTED("atributo123" , "vou ser um conteudo")
     val rootDirectory = translate(f)
     val rootDirectory2 = translate(n)

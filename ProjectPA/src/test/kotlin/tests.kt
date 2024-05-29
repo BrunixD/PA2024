@@ -1,6 +1,8 @@
 package tests
 import main.kotlin.Anotations
 import main.*
+import main.kotlin.ExampleSelfClosingElementAsClass
+import main.kotlin.FUCAdapter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import main.kotlin.translate
@@ -15,15 +17,31 @@ val componenteQ = SelfClosingElement("componente", parent = avaliacao, /*attribu
 val componenteP = SelfClosingElement("componente", parent = avaliacao, /*attributes = mutableMapOf("nome=\"Projeto\"", "peso=\"80%\"")*/)
 val fuc2 = ParentElement("fuc2", parent=plano, /*attributes =mutableMapOf("codigo='03782'")*/)
 
-@Anotations.ParentElement("DWithN")
-class ParentwithNest(
+// Define a FUC class example annotated with ParentElement and XmlAdapter
+@Anotations.ParentElement("Fuc")
+@Anotations.XmlAdapter(FUCAdapter::class)
+class FUC(
     @Anotations.Attribute("Código")
     val codigo: String,
-    @Anotations.SelfClosingElementAttribute("Nome")
+    @Anotations.SelfClosingElementPrimitive("Nome")
     val nome: String,
-    @Anotations.SelfClosingElementAttribute("Ects")
+    @Anotations.SelfClosingElementPrimitive("Ects")
     val ects: Double,
-    @Anotations.SelfClosingElementAttribute("Observações")
+    @Anotations.SelfClosingElementPrimitive("Observações")
+    val observacoes: String,
+    @Anotations.SelfClosingElement("NN")
+    val ex: ExampleSelfClosingElementAsClass,
+)
+
+@Anotations.ParentElement("DWithN")
+class ParentwithSelfClosing(
+    @Anotations.Attribute("Código")
+    val codigo: String,
+    @Anotations.SelfClosingElementPrimitive("Nome")
+    val nome: String,
+    @Anotations.SelfClosingElementPrimitive("Ects")
+    val ects: Double,
+    @Anotations.SelfClosingElementPrimitive("Observações")
     val observacoes: String,
 
     )
@@ -35,7 +53,7 @@ class ParentwithoutNest(
 
 @Anotations.SelfClosingElement("NestedWithContent")
 class SelfClosingWithContent(
-    @Anotations.Attribute("Sou um Atributo")
+    @Anotations.Attribute("Código")
     val atributo: String,
     @Anotations.SelfClosingElementContent()
     val conteudo: String,
@@ -44,7 +62,7 @@ class SelfClosingWithContent(
 
 @Anotations.SelfClosingElement("NestedWithoutContent")
 class SelfClosingWithoutContent(
-    @Anotations.Attribute("Sou um Atributo")
+    @Anotations.Attribute("Código")
     val atributo: String,
 
     )
@@ -53,11 +71,11 @@ class SelfClosingWithoutContent(
 class ParentwithListOfChildren(
     @Anotations.Attribute("Código")
     val codigo: String,
-    @Anotations.SelfClosingElementAttribute("Nome")
+    @Anotations.SelfClosingElementPrimitive("Nome")
     val nome: String,
-    @Anotations.SelfClosingElementAttribute("Ects")
+    @Anotations.SelfClosingElementPrimitive("Ects")
     val ects: Double,
-    @Anotations.SelfClosingElementAttribute("Observações")
+    @Anotations.SelfClosingElementPrimitive("Observações")
     val observacoes: String,
     @Anotations.SelfClosingElement("Avaliacao")
     val avaliacao: List<SelfClosingWithoutContent>
@@ -67,14 +85,14 @@ class ParentwithListOfChildren(
 class ParentwithListOfChildrenDirectory(
     @Anotations.Attribute("Código")
     val codigo: String,
-    @Anotations.SelfClosingElementAttribute("Nome")
+    @Anotations.SelfClosingElementPrimitive("Nome")
     val nome: String,
-    @Anotations.SelfClosingElementAttribute("Ects")
+    @Anotations.SelfClosingElementPrimitive("Ects")
     val ects: Double,
-    @Anotations.SelfClosingElementAttribute("Observações")
+    @Anotations.SelfClosingElementPrimitive("Observações")
     val observacoes: String,
     @Anotations.ParentElement("Avaliacao")
-    val avaliacao: List<ParentwithNest>
+    val avaliacao: List<ParentwithSelfClosing>
 )
 
 class tests{
@@ -91,7 +109,7 @@ class tests{
     @Test
     fun addNestedEntityTest() {
         val testEntity = SelfClosingElement("testEntity")
-        plano.addNestedEntity("testEntity")
+        plano.addSelfClosingElementEntity("testEntity")
         assertFalse(plano.children.contains(testEntity))
     }
 
@@ -101,7 +119,7 @@ class tests{
     @Test
     fun addDirectoryEntityTest() {
         val testEntity = SelfClosingElement("testEntity")
-        plano.addDirectoryEntity("testEntity")
+        plano.addParentElementEntity("testEntity")
         assertFalse(plano.children.contains(testEntity))
     }
 
@@ -157,7 +175,7 @@ class tests{
         componenteP.addAttribute("Peso", "80%")
 
         cursoPA.addAttribute("content", "2020")
-        plano.addNestedEntity(entityName = "teste", entityContent = "Isto e content")
+        plano.addSelfClosingElementEntity(entityName = "teste", entityContent = "Isto e content")
         assertEquals(
             "<plano>\n" +
                     "\t<curso content=\"2020\">Mestrado em Engenharia Informática</curso>\n" +
@@ -260,125 +278,95 @@ class tests{
         assertEquals(avaliacao.prettyPrint(), plano.xPath("plano/fuc/avaliacao"))
     }
 
+    /**
+     * Tests the translation of an object to a single SelfClosingElement.
+     */
     @Test
-    fun testTranslateNestedEntity() {
+    fun testTranslateSelfClosingElement() {
         // Act
-        val DWN = ParentwithNest("M4A1", "Diretório com Nest", 6.0, "Desgosto")
+        val SCE = SelfClosingWithoutContent("M4A1")
         // Assert
         val attributes = mutableMapOf<String,String>()
         attributes.put("Código", "M4A1")
 
-        val DirectoryTest = ParentElement("DWithN", null, attributes)
-        print(translate(DWN).prettyPrint())
-        assertEquals(DirectoryTest, translate(DWN))
+        val parentElementTest = SelfClosingElement("NestedWithoutContent",null,null,attributes)
+        print(translate(SCE).prettyPrint())
+        assertEquals(parentElementTest, translate(SCE))
     }
 
+    /**
+     * Tests the translation of an object to a ParentElement with only attributes.
+     */
     @Test
-    fun testTranslateDirectoryWithoutNestedEntities() {
+    fun testTranslateParentElementWithOnlyAttribute() {
 
 
         // Act
-        val DwithoutN= ParentwithoutNest("M4A1")
+        val parentWithoutSelfClosing= ParentwithoutNest("M4A1",)
 
         // Assert
         val attributes = mutableMapOf<String,String>()
         attributes.put("Código", "M4A1")
 
-        val DirectoryTest = ParentElement("DWithoutN", null, attributes)
-        print(translate(DwithoutN).prettyPrint())
-        assertEquals(DirectoryTest, translate(DwithoutN))
+        val parentElementTest = ParentElement("DWithoutN", null, attributes)
+        print(translate(parentWithoutSelfClosing).prettyPrint())
+        assertEquals(parentElementTest, translate(parentWithoutSelfClosing))
     }
 
+    /**
+     * Tests the translation of an object to a ParentElement with SelfClosing Children.
+     */
     @Test
-    fun testTranslateDirectoryWithNestedEntities() {
-        // Arrange
-        val directoryObject = object {
-            @Anotations.ParentElement("TestDir")
-            @Anotations.Attribute("TestAttr")
-            val attr: String = "AttrValue"
-            @Anotations.SelfClosingElement("TestNested")
-            val selfClosingElement: String = "NestedValue"
-        }
-
+    fun testTranslateParentElementWithSelfClosingChildren() {
         // Act
-        val result = translate(directoryObject)
-
+        val pWSC = ParentwithSelfClosing("M4A1", "ParentElement com SelfClosing", 6.0, "gosto")
         // Assert
-        assertTrue(result is ParentElement)
-        val parentElement = result as ParentElement
-        assertEquals("TestDir", parentElement.name)
-        assertNotNull(parentElement.attributes)
-        assertEquals("AttrValue", parentElement.attributes?.get("TestAttr"))
+        val attributes = mutableMapOf<String,String>()
+        attributes.put("Código", "M4A1")
 
-        val nestedEntities = parentElement.children.filterIsInstance<SelfClosingElement>()
-        assertEquals(1, nestedEntities.size)
-
-        val nestedEntity = nestedEntities.find { it.name == "TestNested" }
-        assertNotNull(nestedEntity)
-        assertEquals("NestedValue", nestedEntity?.content)
+        val parentElementTest = ParentElement("DWithN", null, attributes)
+        print(translate(pWSC).prettyPrint())
+        assertEquals(parentElementTest, translate(pWSC))
     }
 
+    /**
+     * Tests the translation of an object to a ParentElement with SelfClosingElement Children in a property list.
+     */
     @Test
-    fun testTranslateDirectoryWithParentElementChildren() {
-        // Arrange
-        val parentObject = object {
-            @Anotations.ParentElement("ParentDir")
-            val child = object {
-                @Anotations.ParentElement("ChildDir")
-                @Anotations.Attribute("ChildAttr")
-                val attr: String = "ChildAttrValue"
-            }
-        }
-
+    fun testTranslateParentElementWithListOfChildrenSelfClosing() {
         // Act
-        val result = translate(parentObject)
-
-        // Assert
-        assertTrue(result is ParentElement)
-        val parentEntity = result as ParentElement
-        assertEquals("ParentDir", parentEntity.name)
-
-        val childParentElements = parentEntity.children.filterIsInstance<ParentElement>()
-        assertEquals(1, childParentElements.size)
-
-        val childEntity = childParentElements.find { it.name == "ChildDir" }
-        assertNotNull(childEntity)
-        assertNotNull(childEntity?.attributes)
-        assertEquals("ChildAttrValue", childEntity?.attributes?.get("ChildAttr"))
-    }
-
-    @Test
-    fun testTranslateParentElementWithListOfChildrenNested() {
-        // Act
-        val NWC = SelfClosingWithoutContent("atributo_1")
-        val NWC2 = SelfClosingWithoutContent("atributo_2")
-        val list = listOf<SelfClosingWithoutContent>(NWC,NWC2)
-        val DWLC = ParentwithListOfChildren("M4A1", "Diretório com Nest", 6.0, "Desgosto",list)
+        val sCWC = SelfClosingWithoutContent("atributo_1")
+        val sCWC2 = SelfClosingWithoutContent("atributo_2")
+        val list = listOf<SelfClosingWithoutContent>(sCWC,sCWC2)
+        val pWLC = ParentwithListOfChildren("M4A1", "Diretório com Nest", 6.0, "Desgosto",list)
 
 
         // Assert
         val attributes = mutableMapOf<String,String>()
         attributes.put("Código", "M4A1")
-        println(translate(DWLC).prettyPrint())
-        val ParentElementTest = ParentElement("DWithListOfChildren", null, attributes)
-        assertEquals(ParentElementTest, translate(DWLC))
+        println(translate(pWLC).prettyPrint())
+        val parentElementTest = ParentElement("DWithListOfChildren", null, attributes)
+        assertEquals(parentElementTest, translate(pWLC))
     }
 
+    /**
+     * Tests the translation of an object to a ParentElement with ParentElement Children in a property list.
+     */
     @Test
     fun testTranslateParentElementWithListOfChildrenDirectory() {
         // Act
-        val NWC = ParentwithNest("M4A1", "Diretório com Nest 1", 4.0, "Desgosto 1")
-        val NWC2 = ParentwithNest("M4A2", "Diretório com Nest 2", 5.0, "Desgosto 2")
-        val list = listOf<ParentwithNest>(NWC,NWC2)
-        val DWLC = ParentwithListOfChildrenDirectory("M4A1", "Diretório com Nest", 6.0, "Desgosto",list)
+        val pWSC = ParentwithSelfClosing("M4A1", "Parent com Nest 1", 4.0, "gosto 1")
+        val pWSC2 = ParentwithSelfClosing("M4A2", "Parent com Nest 2", 5.0, "gosto 2")
+        val list = listOf<ParentwithSelfClosing>(pWSC,pWSC2)
+        val pWLC = ParentwithListOfChildrenDirectory("M4A1", "Parent com Nest", 6.0, "gosto",list)
 
 
         // Assert
         val attributes = mutableMapOf<String,String>()
         attributes.put("Código", "M4A1")
-        println(translate(DWLC).prettyPrint())
-        val ParentElementTest = ParentElement("DWithListOfChildrenDirectory", null, attributes)
-        assertEquals(ParentElementTest, translate(DWLC))
+        println(translate(pWLC).prettyPrint())
+        val parentElementTest = ParentElement("DWithListOfChildrenDirectory", null, attributes)
+        assertEquals(parentElementTest, translate(pWLC))
     }
 }
 

@@ -1,12 +1,12 @@
 package main
 /**
- * Represents a nested entity within a directory structure.
+ * Represents a SelfClosingElement entity within a ParentElement structure.
  * This class implements the [Element] interface.
  *
- * @property name The name of the nested entity.
- * @property content The content associated with the nested entity.
- * @property parent The parent directory entity of the nested entity, if any.
- * @property attributes Additional attributes associated with the nested entity, stored as key-value pairs.
+ * @property name The name of the SelfClosingElement entity.
+ * @property content The content associated with the SelfClosingElement entity.
+ * @property parent The parent ParentElement entity of the SelfClosingElement entity, if any.
+ * @property attributes Additional attributes associated with the SelfClosingElement entity, stored as key-value pairs.
  */
 data class SelfClosingElement(
     override var name: String,
@@ -20,10 +20,10 @@ data class SelfClosingElement(
     }
 
     /**
-     * Generates a pretty-printed representation of the nested entity with optional indentation.
+     * Generates a pretty-printed representation of the SelfClosingElement entity with optional indentation.
      *
      * @param indentLevel The level of indentation to apply.
-     * @return A string containing the pretty-printed representation of the nested entity.
+     * @return A string containing the pretty-printed representation of the SelfClosingElement entity.
      */
     override fun prettyPrint(indentLevel: Int): String = buildString {
         // Construct the string representation of attributes

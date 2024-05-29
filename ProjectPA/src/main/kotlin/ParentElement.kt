@@ -1,11 +1,11 @@
 package main
 /**
- * Represents a directory entity within a directory structure.
+ * Represents a ParentElement entity within a ParentElement structure.
  * This class implements the [Element] interface.
  *
- * @property name The name of the directory entity.
- * @property parent The parent directory entity of the directory entity, if any.
- * @property attributes Additional attributes associated with the directory entity, stored as key-value pairs.
+ * @property name The name of the ParentElement entity.
+ * @property parent The parent ParentElement entity of the ParentElement entity, if any.
+ * @property attributes Additional attributes associated with the ParentElement entity, stored as key-value pairs.
  */
 data class ParentElement(
     override var name: String,
@@ -14,7 +14,7 @@ data class ParentElement(
 ) : Element {
 
     /**
-     * The list of child entities contained within this directory entity.
+     * The list of child entities contained within this ParentElement entity.
      */
     val children: MutableList<Element> = mutableListOf()
 
@@ -34,10 +34,10 @@ data class ParentElement(
     }
 
     /**
-     * Generates a pretty-printed representation of the directory entity with optional indentation.
+     * Generates a pretty-printed representation of the ParentElement entity with optional indentation.
      *
      * @param indentLevel The level of indentation to apply.
-     * @return A string containing the pretty-printed representation of the directory entity.
+     * @return A string containing the pretty-printed representation of the ParentElement entity.
      */
     override fun prettyPrint(indentLevel: Int): String = buildString {
         val indentation = "\t".repeat(indentLevel)

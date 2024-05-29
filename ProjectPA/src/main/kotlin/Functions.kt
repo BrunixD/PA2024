@@ -1,7 +1,7 @@
 package main
 
 /**
- * Contains extension functions related to entities and directory entities.
+ * Contains extension functions related to Elements.
  */
 
 
@@ -13,35 +13,36 @@ fun Element.removeEntity() {
 }
 
 /**
- * Adds a new directory entity to the current directory entity.
+ * Adds a new ParentElement entity to the current ParentElement entity.
  *
- * @param entityName The name of the directory entity to add.
- * @param entityAttributes Optional attributes associated with the directory entity.
+ * @param entityName The name of the ParentElement entity to add.
+ * @param entityAttributes Optional attributes associated with the ParentElement entity.
  */
-fun ParentElement.addDirectoryEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
+fun ParentElement.addParentElementEntity(entityName: String, entityAttributes: MutableMap<String, String>? = null) {
     ParentElement(name = entityName, parent = this, attributes = entityAttributes)
 }
 
 /**
- * Adds a new nested entity to the current directory entity.
+ * Adds a new SelfClosingElement entity to the current ParentElement entity.
  *
- * @param entityName The name of the nested entity to add.
- * @param entityContent Optional content associated with the nested entity.
- * @param entityAttributes Optional attributes associated with the nested entity.
+ * @param entityName The name of the SelfClosingElement entity to add.
+ * @param entityContent Optional content associated with the SelfClosingElement entity.
+ * @param entityAttributes Optional attributes associated with the SelfClosingElement entity.
  */
-fun ParentElement.addNestedEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
+fun ParentElement.addSelfClosingElementEntity(entityName: String, entityContent: String? = null, entityAttributes: MutableMap<String, String>? = null) {
     SelfClosingElement(name = entityName, parent = this, content = entityContent, attributes = entityAttributes)
 }
 
 /**
  * Adds a new attribute to the entity.
+ * Returns exception if attribute key already exists
  *
  * @param attributeKey The key of the attribute to add.
  * @param attributeValue The value of the attribute to add.
  */
 fun Element.addAttribute(attributeKey: String, attributeValue: String) {
     this.attributes?.keys?.forEach { key->
-        if (key == attributeKey) return
+        if (key == attributeKey) throw IllegalArgumentException("Attribute already exists")
     }
     this.attributes?.put(attributeKey, attributeValue)
 }
@@ -66,9 +67,9 @@ fun Element.alterAttribute(attributeKey: String, attributeValue: String) {
 }
 
 /**
- * Retrieves the parent directory entity of the entity.
+ * Retrieves the parent ParentElement entity of the entity.
  *
- * @return The parent directory entity, or null if the entity has no parent.
+ * @return The parent ParentElement entity, or null if the entity has no parent.
  */
 fun Element.getParent(): ParentElement? {
     return if (this.parent != null)
@@ -78,7 +79,7 @@ fun Element.getParent(): ParentElement? {
 }
 
 /**
- * Retrieves the list of child entities of the directory entity.
+ * Retrieves the list of child entities of the ParentElement entity.
  *
  * @return The list of child entities.
  */
@@ -87,7 +88,7 @@ fun ParentElement.getChildren(): MutableList<Element> {
 }
 
 /**
- * Adds an attribute to all entities with the specified name within the directory entity's hierarchy.
+ * Adds an attribute to all entities with the specified name within the ParentElement entity's hierarchy.
  *
  * @param entityName The name of the entities to which the attribute will be added.
  * @param nome The name of the attribute to add.
@@ -101,7 +102,7 @@ fun ParentElement.addAttributeGlobal(entityName: String, nome: String, value: St
 }
 
 /**
- * Renames all entities with the specified old name to the new name within the directory entity's hierarchy.
+ * Renames all entities with the specified old name to the new name within the ParentElement entity's hierarchy.
  *
  * @param entityOld The old name of the entities to be renamed.
  * @param entityNew The new name for the entities.
@@ -116,7 +117,7 @@ fun ParentElement.renameEntityGlobal(entityOld: String, entityNew: String) {
 }
 
 /**
- * Renames an attribute across all entities with the specified name within the directory entity's hierarchy.
+ * Renames an attribute across all entities with the specified name within the ParentElement entity's hierarchy.
  *
  * @param entityName The name of the entities to search for.
  * @param attributeNameOld The old name of the attribute to rename.
@@ -134,7 +135,7 @@ fun ParentElement.renameAttributeNameGlobal(entityName: String, attributeNameOld
 }
 
 /**
- * Removes all entities with the specified name from the directory entity's hierarchy.
+ * Removes all entities with the specified name from the ParentElement entity's hierarchy.
  *
  * @param entityName The name of the entities to remove.
  */
@@ -148,7 +149,7 @@ fun Element.removeEntityGlobal(entityName: String) {
 }
 
 /**
- * Removes an attribute from all entities with the specified name within the directory entity's hierarchy.
+ * Removes an attribute from all entities with the specified name within the ParentElement entity's hierarchy.
  *
  * @param entityName The name of the entities to search for.
  * @param attributeKeyName The key of the attribute to remove.
@@ -161,7 +162,7 @@ fun Element.removeAttributeGlobal(entityName: String, attributeKeyName: String) 
 }
 
 /**
- * Performs an XPath-like search across the directory entity's hierarchy and returns matching entities as a string.
+ * Performs an XPath-like search across the ParentElement entity's hierarchy and returns matching entities as a string.
  *
  * @param path The XPath-like path to search for.
  * @return A string containing the pretty-printed representation of the matching entities.
